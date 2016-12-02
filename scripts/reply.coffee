@@ -10,7 +10,7 @@
 
 module.exports = (robot) ->
   callList = [
-    'もふう :exclamation'
+    'もふう :exclamation:'
     'もっふふ♪'
     'もふぅ :question:'
     'もふーーー :bangbang:'
