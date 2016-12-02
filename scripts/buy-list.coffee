@@ -55,6 +55,8 @@ module.exports = (robot) ->
 
     # 一覧表示
     buyList = robot.brain.get(key) ? []
+    if buyList.length == 0
+      return msg.send "もふもふ (買いたいものはないよ)"
     index = 1
     message = buyList.sort (a, b) ->
       if a.createdAt.isSame(b.createdAt)
