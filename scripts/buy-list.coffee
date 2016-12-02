@@ -16,27 +16,37 @@ moment = require 'moment'
 module.exports = (robot) ->
   moment.locale('ja')
   key = 'buy-list'
-  robot.hear /(買い物リスト|buylist)(.*)/i, (msg) ->
+  robot.hear /(買い物リスト|buylist|buy-list|buy list)(.*)/i, (msg) ->
     secondCommands = msg.match[2]
 
+    # ---------------
     # 追加
+    # ---------------
     if result = /(追加|add)\s*(\S+.*)/i.exec(secondCommands)
       item = result[2]
       buyList = robot.brain.get(key) ? []
       buyList.push { createdAt: moment(), name: item }
       robot.brain.set(key, buyList)
-      return msg.send "もっふふー :heart: (#{item}を追加したよ)"
+      msg.send "もっふふー :heart: (#{item}を追加したよ)"
+      # 一覧表示のためあえて return しない
 
+    # ---------------
     # 削除
-    if result = /(削除|remove|delete)\s*(\S+.*)/i.exec(secondCommands)
+    # ---------------
+    else if result = /(削除|remove|delete)\s*(\S+.*)/i.exec(secondCommands)
       item = result[2]
 
+      # ---------------
       # 全件
+      # ---------------
       if /(全部|ぜんぶ|all)/i.exec(item)
         robot.brain.set(key, [])
-        return msg.send "もふう :bangbang: (全部削除したよ)"
+        msg.send "もふう :bangbang: (全部削除したよ)"
+        # 一覧表示のためあえて return しない
 
+      # ---------------
       # 部分削除
+      # ---------------
       if isNaN(parseInt(item))
         return msg.send "もふもふもっふー :bangbang: (買い物リストで表示される数字を入力してね)"
       index = item
@@ -53,7 +63,9 @@ module.exports = (robot) ->
       msg.send "もふっ :exclamation: (削除したよ)"
       # あえて return せずリストを表示
 
+    # ---------------
     # 一覧表示
+    # ---------------
     buyList = robot.brain.get(key) ? []
     if buyList.length == 0
       return msg.send "もふもふ (買いたいものはないよ)"
