@@ -24,9 +24,9 @@ module.exports = (robot) ->
     # 追加
     # ---------------
     if result = /(追加|add)\s*(\S+.*)/i.exec(secondCommands)
-      item = "#{result[2]} by #{msg.message.user.name}"
+      item = result[2]
       buyList = robot.brain.get(key) ? []
-      buyList.push { createdAt: moment(), name: item }
+      buyList.push { createdAt: moment(), name: "#{item} by #{msg.message.user.name}" }
       robot.brain.set(key, buyList)
       robot.brain.save()
       msg.send "もっふふー :heart: (#{item}を追加したよ)"
