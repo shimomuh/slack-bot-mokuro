@@ -55,9 +55,9 @@ module.exports = (robot) ->
       index = item
       buyList = robot.brain.get(key) ? []
       sortedBuyList = buyList.sort (a, b) ->
-        if a.createdAt.isSame(b.createdAt)
+        if a.createdAt == b.createdAt
           0
-        else if a.createdAt.isBefore(b.createdAt)
+        else if a.createdAt < b.createdAt
           -1
         else
           1
@@ -75,9 +75,9 @@ module.exports = (robot) ->
       return msg.send "もふもふ (買いたいものはないよ)"
     index = 1
     message = buyList.sort (a, b) ->
-      if a.createdAt.isSame(b.createdAt)
+      if a.createdAt == b.createdAt
         0
-      else if a.createdAt.isBefore(b.createdAt)
+      else if a.createdAt < b.createdAt
         -1
       else
         1
