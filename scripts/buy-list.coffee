@@ -81,6 +81,6 @@ module.exports = (robot) ->
       else
         1
     .map (item) ->
-      "#{index++}. #{item.createdAt.format('YYYY-MM-DD(ddd)')} #{item.name}"
+      "#{index++}. #{moment(item.createdAt).format('YYYY-MM-DD(ddd)')} #{item.name}"
     .join '\n'
     msg.send message
