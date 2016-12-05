@@ -11,6 +11,7 @@
 #
 # Author:
 #   shimomuh <shimomuh0501@gmail.com>
+
 moment = require 'moment'
 
 module.exports = (robot) ->
@@ -23,7 +24,7 @@ module.exports = (robot) ->
     # 追加
     # ---------------
     if result = /(追加|add)\s*(\S+.*)/i.exec(secondCommands)
-      item = result[2]
+      item = "#{result[2]} by #{msg.message.user.name}"
       buyList = robot.brain.get(key) ? []
       buyList.push { createdAt: moment(), name: item }
       robot.brain.set(key, buyList)
