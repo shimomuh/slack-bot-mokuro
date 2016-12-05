@@ -27,6 +27,7 @@ module.exports = (robot) ->
       buyList = robot.brain.get(key) ? []
       buyList.push { createdAt: moment(), name: item }
       robot.brain.set(key, buyList)
+      robot.brain.save()
       msg.send "もっふふー :heart: (#{item}を追加したよ)"
       # 一覧表示のためあえて return しない
 
@@ -41,6 +42,7 @@ module.exports = (robot) ->
       # ---------------
       if /(全部|ぜんぶ|all)/i.exec(item)
         robot.brain.set(key, [])
+        robot.brain.save()
         msg.send "もふう :bangbang: (全部削除したよ)"
         # 一覧表示のためあえて return しない
 
@@ -60,6 +62,7 @@ module.exports = (robot) ->
           1
       item = sortedBuyList.splice(index - 1, 1)
       robot.brain.set(key, sortedBuyList)
+      robot.brain.save()
       msg.send "もふっ :exclamation: (削除したよ)"
       # あえて return せずリストを表示
 
