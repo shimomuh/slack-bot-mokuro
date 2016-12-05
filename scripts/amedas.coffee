@@ -29,9 +29,9 @@ module.exports = (robot) ->
     robot.logger.warning 'Required HUBOT_YAHOO_APP_ID env'
     return
 
-  robot.respond /amesh( zoom)? (.*)/i, (msg) ->
-    zoom = if msg.match[1] then 14 else 12
-    area = msg.match[2]
+  robot.hear /(アメダス|あめだす|amedasu|amedas)\s*(zoom|ズーム|ずーむ)? (.*)/i, (msg) ->
+    zoom = if msg.match[2] then 14 else 12
+    area = msg.match[3]
 
     msg.http("http://geo.search.olp.yahooapis.jp/OpenLocalPlatform/V1/geoCoder")
       .query(
