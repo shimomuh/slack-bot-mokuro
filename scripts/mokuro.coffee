@@ -4,6 +4,7 @@
 # Commands:
 #   もくろー
 #   モクロー
+#   もくちゃん
 #
 # Author:
 #   shimomuh <shimomuh0501@gmail.com>
@@ -18,5 +19,5 @@ module.exports = (robot) ->
     ':zzz:'
     ':bangbang:'
   ]
-  robot.hear /(もくろー|モクロー)/, (msg) ->
+  robot.hear /(もくろー|モクロー|もくちゃん)/, (msg) ->
     msg.send msg.random callList
