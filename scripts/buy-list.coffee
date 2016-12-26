@@ -43,8 +43,7 @@ module.exports = (robot) ->
       if /(全部|ぜんぶ|all)/i.exec(item)
         robot.brain.set(key, [])
         robot.brain.save()
-        msg.send "もふう :bangbang: (全部削除したよ)"
-        # 一覧表示のためあえて return しない
+        return msg.send "もふう :bangbang: (全部削除したよ)"
 
       # ---------------
       # 部分削除
@@ -63,8 +62,7 @@ module.exports = (robot) ->
       item = sortedBuyList.splice(index - 1, 1)
       robot.brain.set(key, sortedBuyList)
       robot.brain.save()
-      msg.send "もふっ :exclamation: (削除したよ)"
-      # あえて return せずリストを表示
+      return msg.send "もふっ :exclamation: (削除したよ)"
 
     # ---------------
     # 一覧表示
@@ -83,4 +81,4 @@ module.exports = (robot) ->
     .map (item) ->
       "#{index++}. #{moment(item.createdAt).format('YYYY-MM-DD(ddd)')} #{item.name}"
     .join '\n'
-    msg.send message
+    msg.send "``` #{message} ```"
