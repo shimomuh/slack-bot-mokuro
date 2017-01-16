@@ -16,8 +16,10 @@ moment = require 'moment'
 module.exports = (robot) ->
   moment.locale('ja')
   key = 'buy-list'
+
   robot.hear /(買い物リスト|buylist|buy-list|buy list)(.*)/i, (msg) ->
     secondCommands = msg.match[2]
+    responseMessages = []
 
     # ---------------
     # 追加
@@ -28,7 +30,7 @@ module.exports = (robot) ->
       buyList.push { createdAt: moment(), name: item }
       robot.brain.set(key, buyList)
       robot.brain.save()
-      msg.send "もっふふー :heart: (#{result[2]}を追加したよ)"
+      responseMessages.push "もっふふー :heart: (#{result[2]}を追加したよ)"
       # 一覧表示のためあえて return しない
 
     # ---------------
@@ -43,26 +45,30 @@ module.exports = (robot) ->
       if /(全部|ぜんぶ|all)/i.exec(item)
         robot.brain.set(key, [])
         robot.brain.save()
-        return msg.send "もふう :bangbang: (全部削除したよ)"
+        responseMessages.push "もふう :bangbang: (全部削除したよ)"
 
       # ---------------
       # 部分削除
       # ---------------
-      if isNaN(parseInt(item))
-        return msg.send "もふもふもっふー :bangbang: (買い物リストで表示される数字を入力してね)"
-      index = item
+      if item.size == 0
+        return msg.send "もふもふもっふー :bangbang: (買い物リストで表示される文字を入力してね)"
+
+      candidates = []
+      rest = []
       buyList = robot.brain.get(key) ? []
-      sortedBuyList = buyList.sort (a, b) ->
-        if a.createdAt == b.createdAt
-          0
-        else if a.createdAt < b.createdAt
-          -1
+      for buyItem in buyList
+        if (new RegExp(item)).exec(buyItem.name)?
+          candidates.push buyItem
         else
-          1
-      item = sortedBuyList.splice(index - 1, 1)
-      robot.brain.set(key, sortedBuyList)
-      robot.brain.save()
-      return msg.send "もふっ :exclamation: (削除したよ)"
+          rest.push buyItem
+      if candidates.length == 1
+        robot.brain.set(key, rest)
+        robot.brain.save()
+        responseMessages.push "もふっ :exclamation: (#{candidates[0].name}を削除したよ)"
+      else if candidates.length == 0
+        responseMessages.push "もふもふふ (削除したいものが見つからないよ)"
+      else
+        responseMessages.push "もふー :x: :x: (削除したいものが多すぎるよ)"
 
     # ---------------
     # 一覧表示
@@ -81,4 +87,5 @@ module.exports = (robot) ->
     .map (item) ->
       "#{index++}. #{moment(item.createdAt).format('YYYY-MM-DD(ddd)')} #{item.name}"
     .join '\n'
-    msg.send "```#{message}```"
+    responseMessages.push "```#{message}```"
+    msg.send responseMessages.join '\n'
