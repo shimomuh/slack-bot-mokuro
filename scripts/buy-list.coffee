@@ -77,14 +77,14 @@ module.exports = (robot) ->
     if buyList.length == 0
       return msg.send "もふもふ (買いたいものはないよ)"
     index = 1
-    message = buyList.sort (a, b) ->
+    sortedBuyList = buyList.sort (a, b) ->
       if a.createdAt == b.createdAt
         0
       else if a.createdAt < b.createdAt
         -1
       else
         1
-    .map (item) ->
+    message = sortedBuyList.map (item) ->
       "#{index++}. #{moment(item.createdAt).format('YYYY-MM-DD(ddd)')} #{item.name}"
     .join '\n'
     responseMessages.push "```#{message}```"
